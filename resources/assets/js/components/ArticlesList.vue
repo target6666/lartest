@@ -32,7 +32,7 @@
                 <tr v-for="article in articles" v-bind:key="article.id">
                     <td>{{article.name}}</td>
                     <td>
-                        {{article.category_id}}
+                        {{getCategoryPath(article)}}
                     </td>
                     <td>{{article.artno}}</td>
                     <td></td>
@@ -51,7 +51,7 @@ export default {
             articles: [],
             pagination: {},
             page: 1,
-            limit: 15,
+            limit: 800,
             search: '',
             filters: [],
             sortBy: 'name'
@@ -114,12 +114,22 @@ export default {
             e.preventDefault();
             this.sortBy=s;
             this.fetchArticles();
+        },
+
+        getCategoryPath(article){
+            let cat=article.category;
+            let path='';
+            while(cat){
+                path = cat.name + ' / ' + path;
+                cat=cat.parent;
+            }
+            return path;
         }
 
     },
     computed: {
         url: function(){
-            let queryUrl = "/api/articles?"+"sort="+this.sortBy;
+            let queryUrl = "/api/articles?"+"sort="+this.sortBy+"&limit="+this.limit;
             if (this.filters.length>0){
                 for(let i=0; this.filters[i]; i++){
                     queryUrl=queryUrl + "&filter"+i+"="+this.filters[i];

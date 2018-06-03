@@ -47364,7 +47364,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             articles: [],
             pagination: {},
             page: 1,
-            limit: 15,
+            limit: 800,
             search: '',
             filters: [],
             sortBy: 'name'
@@ -47423,11 +47423,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             e.preventDefault();
             this.sortBy = s;
             this.fetchArticles();
+        },
+        getCategoryPath: function getCategoryPath(article) {
+            var cat = article.category;
+            var path = '';
+            while (cat) {
+                path = cat.name + ' / ' + path;
+                cat = cat.parent;
+            }
+            return path;
         }
     },
     computed: {
         url: function url() {
-            var queryUrl = "/api/articles?" + "sort=" + this.sortBy;
+            var queryUrl = "/api/articles?" + "sort=" + this.sortBy + "&limit=" + this.limit;
             if (this.filters.length > 0) {
                 for (var i = 0; this.filters[i]; i++) {
                     queryUrl = queryUrl + "&filter" + i + "=" + this.filters[i];
@@ -47595,7 +47604,7 @@ var render = function() {
             _c("td", [
               _vm._v(
                 "\n                    " +
-                  _vm._s(article.category_id) +
+                  _vm._s(_vm.getCategoryPath(article)) +
                   "\n                "
               )
             ]),

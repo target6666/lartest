@@ -30,14 +30,20 @@ class ArticlesApiController extends Controller
         //generate querystring
         $query="";
         if(count($filterList)>0){
+            //artikel filtern
             for ($i=0; isset($filterList[$i]); $i++){
                 if ($i>0) $query=$query . " AND ";
                 $query=$query . "(name LIKE '%".$filterList[$i]."%' OR artno LIKE '%".$filterList[$i]."%')";
             }
-            $articles=Article::whereRaw($query)->orderBy($sort, 'asc')->paginate($limit);
+
+            // Warengruppen filtern
+
+            
+            $articles=Article::with('category.parent.parent.parent.parent.parent.parent')->whereRaw($query)->orderBy($sort, 'asc')->paginate($limit);
         }
         else{
-            $articles=Article::orderBy($sort, 'asc')->paginate($limit);
+            //eager loading (recursion possible?)
+            $articles=Article::with('category.parent.parent.parent.parent.parent.parent')->orderBy($sort, 'asc')->paginate($limit);
         }
         
 
