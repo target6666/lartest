@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Article;
+use App\Category;
 use App\Http\Resources\ArticleResource;
 
 class ArticlesApiController extends Controller
@@ -28,22 +29,24 @@ class ArticlesApiController extends Controller
         //validate parameters
 
         //generate querystring
-        $query="";
         if(count($filterList)>0){
-            //artikel filtern
+            $query="";
+
+            //Warengruppen filtern
+            //
+            //
+
+            $query="";
             for ($i=0; isset($filterList[$i]); $i++){
+                //artikel filtern
                 if ($i>0) $query=$query . " AND ";
                 $query=$query . "(name LIKE '%".$filterList[$i]."%' OR artno LIKE '%".$filterList[$i]."%')";
             }
-
-            // Warengruppen filtern
-
-            
-            $articles=Article::with('category.parent.parent.parent.parent.parent.parent')->whereRaw($query)->orderBy($sort, 'asc')->paginate($limit);
+            $articles=Article::with('category.parent')->whereRaw($query)->orderBy($sort, 'asc')->paginate($limit);
         }
         else{
             //eager loading (recursion possible?)
-            $articles=Article::with('category.parent.parent.parent.parent.parent.parent')->orderBy($sort, 'asc')->paginate($limit);
+            $articles=Article::with('category.parent')->orderBy($sort, 'asc')->paginate($limit);
         }
         
 
