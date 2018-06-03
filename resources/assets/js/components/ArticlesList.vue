@@ -24,8 +24,8 @@
                     <th><a href="" class="text-dark" @click="sort('name',$event)">Bezeichnung</a><span v-if="sortBy==='name'">&#9660;</span></th>
                     <th><a href="" class="text-dark" @click="sort('category_id',$event)">Warengruppe</a><span v-if="sortBy==='category_id'">&#9660;</span></th>
                     <th><a href="" class="text-dark" @click="sort('artno',$event)">ArtNo.</a><span v-if="sortBy==='artno'">&#9660;</span></th>
-                    <th><span class="text-dark">LxBxH </span></th>
-                    <th><a href="" class="text-dark" @click="sort('weight',$event)">Gewicht</a><span v-if="sortBy==='weight'">&#9660;</span></th>
+                    <th><span class="text-dark">Bestand</span></th>
+                    <th><span class="text-dark"></span></th>
                 </tr>
             </thead>
             <tbody id="sortiment">
@@ -35,8 +35,8 @@
                         {{article.category_id}}
                     </td>
                     <td>{{article.artno}}</td>
-                    <td>{{article.vol_l}}x{{article.vol_b}}x{{article.vol_h}} cm</td>
-                    <td>{{article.weight}} g</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

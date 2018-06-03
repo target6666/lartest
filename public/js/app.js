@@ -47581,22 +47581,7 @@ var render = function() {
           _vm._v(" "),
           _vm._m(0),
           _vm._v(" "),
-          _c("th", [
-            _c(
-              "a",
-              {
-                staticClass: "text-dark",
-                attrs: { href: "" },
-                on: {
-                  click: function($event) {
-                    _vm.sort("weight", $event)
-                  }
-                }
-              },
-              [_vm._v("Gewicht")]
-            ),
-            _vm.sortBy === "weight" ? _c("span", [_vm._v("▼")]) : _vm._e()
-          ])
+          _vm._m(1)
         ])
       ]),
       _vm._v(" "),
@@ -47617,18 +47602,9 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(article.artno))]),
             _vm._v(" "),
-            _c("td", [
-              _vm._v(
-                _vm._s(article.vol_l) +
-                  "x" +
-                  _vm._s(article.vol_b) +
-                  "x" +
-                  _vm._s(article.vol_h) +
-                  " cm"
-              )
-            ]),
+            _c("td"),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(article.weight) + " g")])
+            _c("td")
           ])
         })
       )
@@ -47641,8 +47617,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("th", [
-      _c("span", { staticClass: "text-dark" }, [_vm._v("LxBxH ")])
+      _c("span", { staticClass: "text-dark" }, [_vm._v("Bestand")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", [_c("span", { staticClass: "text-dark" })])
   }
 ]
 render._withStripped = true
