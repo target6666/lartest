@@ -91,12 +91,12 @@ class CategoriesController extends Controller
 
     //tree erzeugen
     public function printTreeList($category){
-        $treeList="<ul><li>$category->name";
+        $treeList="<ul class=tree><li><input type='radio' name='category' value='".$category->id."' id='cat_".$category->id."' class=tree-radio><label for='cat_".$category->id."'> ".$category->name."</lable></li>";
         foreach($category->children as $child){
             $newCategory=$child;
             $treeList.=$this->printTreeList($newCategory);
         }
-        $treeList .="</li></ul>";
+        $treeList .="</ul>";
         return $treeList;
     }
 }
