@@ -47356,6 +47356,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'articles-list',
@@ -47364,7 +47380,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             articles: [],
             pagination: {},
             page: 1,
-            limit: 800,
+            limit: 20,
             search: '',
             filters: [],
             sortBy: 'name'
@@ -47424,6 +47440,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.sortBy = s;
             this.fetchArticles();
         },
+        next: function next(e) {
+            e.preventDefault();
+            this.page = this.page + 1;
+            this.fetchArticles();
+        },
+        prev: function prev(e) {
+            e.preventDefault();
+            this.page--;
+            this.fetchArticles();
+        },
         getCategoryPath: function getCategoryPath(article) {
             var cat = article.category;
             var path = '';
@@ -47436,7 +47462,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         url: function url() {
-            var queryUrl = "/api/articles?" + "sort=" + this.sortBy + "&limit=" + this.limit;
+            var queryUrl = "/api/articles?" + "sort=" + this.sortBy + "&limit=" + this.limit + "&page=" + this.page;
             if (this.filters.length > 0) {
                 for (var i = 0; this.filters[i]; i++) {
                     queryUrl = queryUrl + "&filter" + i + "=" + this.filters[i];
@@ -47455,7 +47481,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
+  return _c("div", [
     _c(
       "form",
       { staticClass: "form-inline my-2" },
@@ -47616,6 +47642,52 @@ var render = function() {
             _c("td")
           ])
         })
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-primary",
+          class: {
+            "btn btn-secondary disabled": !_vm.pagination.prev_page_url
+          },
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              _vm.prev($event)
+            }
+          }
+        },
+        [_vm._v("\n            prev\n        ")]
+      ),
+      _vm._v(" "),
+      _c("span", [
+        _vm._v(
+          "Seite " +
+            _vm._s(_vm.pagination.current_page) +
+            " / " +
+            _vm._s(_vm.pagination.last_page) +
+            " "
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-primary",
+          class: {
+            "btn btn-secondary disabled": !_vm.pagination.next_page_url
+          },
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              _vm.next($event)
+            }
+          }
+        },
+        [_vm._v("\n            next\n        ")]
       )
     ])
   ])

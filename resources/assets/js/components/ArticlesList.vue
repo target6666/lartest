@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
 
         <!-- Filter -->
         <form class="form-inline my-2">
@@ -40,6 +40,22 @@
                 </tr>
             </tbody>
         </table>
+        <!--Pagination-->
+        <div>
+            <a href="#" 
+                class="btn btn-primary" 
+                v-bind:class="{'btn btn-secondary disabled': !pagination.prev_page_url}" 
+                @click="prev($event)">
+                prev
+            </a>
+            <span>Seite {{pagination.current_page}} / {{pagination.last_page}} </span>
+            <a href="#" 
+                class="btn btn-primary" 
+                v-bind:class="{'btn btn-secondary disabled': !pagination.next_page_url}" 
+                @click="next($event)">
+                next
+            </a>
+        </div>
     </div>
 </template>
 
@@ -51,7 +67,7 @@ export default {
             articles: [],
             pagination: {},
             page: 1,
-            limit: 800,
+            limit: 20,
             search: '',
             filters: [],
             sortBy: 'name'
@@ -63,7 +79,6 @@ export default {
     methods:{
         
         fetchArticles(page_url) {
-
             fetch(this.url)
                 .then(res=> res.json())
                 .then(res => {
@@ -116,6 +131,18 @@ export default {
             this.fetchArticles();
         },
 
+        next(e){
+            e.preventDefault();
+            this.page=this.page+1;
+            this.fetchArticles();
+        },
+
+        prev(e){
+            e.preventDefault();
+            this.page--;
+            this.fetchArticles();
+        },
+
         getCategoryPath(article){
             let cat=article.category;
             let path='';
@@ -129,7 +156,7 @@ export default {
     },
     computed: {
         url: function(){
-            let queryUrl = "/api/articles?"+"sort="+this.sortBy+"&limit="+this.limit;
+            let queryUrl = "/api/articles?"+"sort="+this.sortBy+"&limit="+this.limit+"&page="+this.page;
             if (this.filters.length>0){
                 for(let i=0; this.filters[i]; i++){
                     queryUrl=queryUrl + "&filter"+i+"="+this.filters[i];

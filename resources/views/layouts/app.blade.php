@@ -17,7 +17,7 @@
 <body>
     <div id="app">
         @include('inc.navbar')
-        <div class="container">
+        <div class="container col-10">
             @include('inc.message')
             @yield('content')
         </div>
