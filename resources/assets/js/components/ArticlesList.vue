@@ -42,19 +42,19 @@
         </table>
         <!--Pagination-->
         <div>
-            <a href="#" 
+            <button 
                 class="btn btn-primary" 
                 v-bind:class="{'btn btn-secondary disabled': !pagination.prev_page_url}" 
                 @click="prev($event)">
                 prev
-            </a>
+            </button>
             <span>Seite {{pagination.current_page}} / {{pagination.last_page}} </span>
-            <a href="#" 
+            <button 
                 class="btn btn-primary" 
                 v-bind:class="{'btn btn-secondary disabled': !pagination.next_page_url}" 
                 @click="next($event)">
                 next
-            </a>
+            </button>
         </div>
     </div>
 </template>
@@ -105,6 +105,7 @@ export default {
             this.search=this.search.trim();
             if(this.search!=''){
                 this.filters.push(this.search);
+                console.log("new filter created");
                 this.fetchArticles();
             }
             this.search="";

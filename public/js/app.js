@@ -47419,6 +47419,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = this.search.trim();
             if (this.search != '') {
                 this.filters.push(this.search);
+                console.log("new filter created");
                 this.fetchArticles();
             }
             this.search = "";
@@ -47647,13 +47648,12 @@ var render = function() {
     _vm._v(" "),
     _c("div", [
       _c(
-        "a",
+        "button",
         {
           staticClass: "btn btn-primary",
           class: {
             "btn btn-secondary disabled": !_vm.pagination.prev_page_url
           },
-          attrs: { href: "#" },
           on: {
             click: function($event) {
               _vm.prev($event)
@@ -47674,13 +47674,12 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c(
-        "a",
+        "button",
         {
           staticClass: "btn btn-primary",
           class: {
             "btn btn-secondary disabled": !_vm.pagination.next_page_url
           },
-          attrs: { href: "#" },
           on: {
             click: function($event) {
               _vm.next($event)
