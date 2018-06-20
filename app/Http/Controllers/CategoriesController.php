@@ -14,10 +14,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        // benötigt genau eine root-category
-        $categories=Category::where('parent_id', 0)->get();
-
-        return view('categories.index')->with('categories', $this->printTreeList($categories[0]));
+        return view('categories.index');
     }
 
     /**
@@ -84,19 +81,5 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-
-
-
-    //tree erzeugen
-    public function printTreeList($category){
-        $treeList="<ul class=tree><li><input type='radio' name='category' value='".$category->id."' id='cat_".$category->id."' class=tree-radio><label for='cat_".$category->id."'> ".$category->name."</lable></li>";
-        foreach($category->children as $child){
-            $newCategory=$child;
-            $treeList.=$this->printTreeList($newCategory);
-        }
-        $treeList .="</ul>";
-        return $treeList;
     }
 }
