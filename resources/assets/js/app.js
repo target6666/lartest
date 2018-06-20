@@ -15,10 +15,14 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component(
-    'articles-list',
-     require('./components/ArticlesList.vue'));
+
+import ArticlesList from './components/articles/ArticlesList.vue';
+import Categories from './components/categories/Categories.vue';
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    components: {
+        'articles-list': ArticlesList,
+        'categories': Categories,
+    }
 });

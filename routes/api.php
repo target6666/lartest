@@ -19,4 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 //list articles
-Route::resource('/articles', 'Api\ArticlesApiController');
+//Route::resource('/articles', 'Api\ArticlesApiController');
+
+Route::apiResources([
+    'articles' => 'Api\ArticlesApiController',
+    'categories' => 'Api\CategoriesApiController'
+]);

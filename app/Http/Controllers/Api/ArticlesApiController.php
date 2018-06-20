@@ -33,21 +33,32 @@ class ArticlesApiController extends Controller
         if(count($filterList)>0){
             $query="";
 
-            //Warengruppen filtern
-            //
-            //
-
-            $query="";
             for ($i=0; isset($filterList[$i]); $i++){
                 //artikel filtern
                 if ($i>0) $query=$query . " AND ";
                 $query=$query . "(name LIKE '%".$filterList[$i]."%' OR artno LIKE '%".$filterList[$i]."%')";
             }
-            $articles=Article::with('category.parent')->whereRaw($query)->orderBy($sort, 'asc')->paginate($limit);
+            $articles=Article::select('id', 'artno', 'name', 'category_id')
+                ->whereRaw($query)
+                ->with(['category' => function($query){
+                    $query->select('id', 'name', 'parent_id')
+                        ->with(['parent' => function($query){
+                            $query->select('id', 'name', 'parent_id');
+                        }]);
+                }])
+                ->orderBy($sort, 'asc')
+                ->paginate($limit);
         }
         else{
-            //eager loading (recursion possible?)
-            $articles=Article::with('category.parent')->orderBy($sort, 'asc')->paginate($limit);
+            $articles=Article::select('id', 'artno', 'name', 'category_id')
+                ->with(['category' => function($query){
+                    $query->select('id', 'name', 'parent_id')
+                        ->with(['parent' => function($query){
+                            $query->select('id', 'name', 'parent_id');
+                        }]);
+                    }])
+                ->orderBy($sort, 'asc')
+                ->paginate($limit);
         }
         
 
@@ -63,16 +74,6 @@ class ArticlesApiController extends Controller
         return ArticleResource::collection($articles)->additional(['meta' => [
             'sort' =>$sort
             ]]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -93,17 +94,6 @@ class ArticlesApiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     public function children(){
-        return $this->hasMany('App\Category', 'parent_id', 'id')->with('children');
-
+        return $this->hasMany('App\Category', 'parent_id', 'id')
+            ->with(['children' => function($query){
+                $query->select('id', 'name', 'parent_id');
+            }]); ;
     }
     
     public function parent(){
-        return $this->belongsTo('App\Category', 'parent_id')->with('parent');
+        return $this->belongsTo('App\Category', 'parent_id')
+            ->with(['parent' => function($query){
+                $query->select('id', 'name', 'parent_id');
+            }]);
     }
 
     public function articles(){
