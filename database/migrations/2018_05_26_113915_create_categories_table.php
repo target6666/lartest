@@ -17,8 +17,8 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name',255);
             $table->unsignedInteger('parent_id')->nullable();
-            $table->integer('artno_min');
-            $table->integer('artno_max');
+            $table->integer('artno_min')->nullable();;
+            $table->integer('artno_max')->nullable();;
             $table->timestamps();
             $table->softDeletes();
         });
