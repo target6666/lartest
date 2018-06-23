@@ -5,19 +5,18 @@
             name="selectedCategory"
             class="tree-radio"
             @change="select()">
-        <label :for="model.id+'-'+model.parent_id" @click="toggle">
-            <span v-if="isFolder"
-                class="far"
-                :class="open ? 'fa-folder-open' : 'fa-folder'">
+        <label :for="model.id+'-'+model.parent_id" @click="toggleOpened">
+            <span v-if="isFolder" class="far" :class="isOpen ? 'fa-folder-open' : 'fa-folder'">
             </span>
             <span v-if="model.id==-1"><i class="far fa-plus-square"></i></span>
             <span v-else>{{model.name}}</span>
         </label>
-        <ul class="tree" v-show="open">
+        <ul class="tree" v-show="isOpen">
         <categories-tree
             v-for="(child, index) in model.children"
             :key="index"
             :model="child"
+            :opened="opened" 
             v-on:selectionChange="this.$emit('selectionChange', args);"> 
         </categories-tree>
         </ul>
@@ -31,30 +30,49 @@ export default {
     props: {
         model:  {
             type: Object
+        },
+        opened: {
+            type: Array,
+            default: function(){ return []}
         }
     },
-    data() {
-        return {
-            open: false,
-        }
-    },
+
     computed: {
         isFolder: function () {
             return this.model.children &&
             this.model.children.length
+        },
+
+        isOpen: function () {
+            var i = this.opened.indexOf(this.model.id)
+            if (i==-1)
+                return false;
+            else
+                return true;
+
         }
     },
     methods: {
-        toggle: function () {      
-            this.open = !this.open;
+        toggleOpened: function (event) {
+            if (this.model.id>0){
+                var i = this.opened.indexOf(this.model.id)
+                if (i==-1){
+                    this.opened.push(this.model.id);
+                }
+                else{
+                    this.opened.splice(i,1);
+                }
+            }
         },
         select: function(event) {
-            let args={
-                id: this.model.id,
-                parent_id: this.model.parent_id
+            var id
+            if (this.model.id>0){
+                id=this.model.id;
             }
-            
-            bus.$emit("selectionChange", args);
+            else{
+                id=this.model.parent_id * -1
+            }
+            bus.$emit("selectionChange", id);
         }
     }
 }

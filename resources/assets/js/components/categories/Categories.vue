@@ -3,20 +3,16 @@
         <div class="col-md-4 border rounded" >
             <ul class="tree">
             <categories-tree 
-                :model="categories">
+                :model="categories"
+                :opened="opened">
             </categories-tree>
             </ul>
         </div>
         <div class="col-md-8 border rounded" >
-            <categories-details :selected_id="selected.id"></categories-details>
+            <categories-details>
+            </categories-details>
         </div>
-
-        <span>
-            selected: {{selected.id}}
-        </span>
-        <span>
-            parent: {{selected.parent_id}}
-        </span> 
+        <button @click="fetchCategories">refresh tree</button>
     </div>
 
 
@@ -40,20 +36,12 @@ export default {
     data() {
         return {
             categories:{},
-            selected:{
-                id:0,
-                parent_id:-1
-            },
-            categories_opened:[]
+            opened:[]
         }
     },
 
     created() {
         this.fetchCategories();
-        bus.$on("selectionChange", (data)=>{
-            this.selected.id=data.id;
-            this.selected.parent_id=data.parent_id;
-        })
     },
 
     methods:{
@@ -66,6 +54,7 @@ export default {
                     this.addMetaToCategories(this.categories);
                 })
                 .catch(err => console.log(err));
+                console.log("fetched categories");
         },
 
         addMetaToCategories(cat){
