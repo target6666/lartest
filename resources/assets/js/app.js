@@ -19,6 +19,7 @@ window.Vue = require('vue');
 import ArticlesList from './components/articles/ArticlesList.vue';
 import Categories from './components/categories/Categories.vue';
 
+export const bus = new Vue();
 const app = new Vue({
     el: '#app',
     components: {

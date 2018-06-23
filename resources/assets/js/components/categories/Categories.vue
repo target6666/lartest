@@ -2,13 +2,23 @@
     <div class="row">
         <div class="col-md-4 border rounded" >
             <ul class="tree">
-            <categories-tree :model="categories" ></categories-tree>
+            <categories-tree 
+                :model="categories">
+            </categories-tree>
             </ul>
         </div>
         <div class="col-md-8 border rounded" >
-            <categories-details :selected_id="selected_id"></categories-details>
-        </div>   
+            <categories-details :selected_id="selected.id"></categories-details>
+        </div>
+
+        <span>
+            selected: {{selected.id}}
+        </span>
+        <span>
+            parent: {{selected.parent_id}}
+        </span> 
     </div>
+
 
 </template>
 
@@ -16,6 +26,8 @@
 
 import CategoriesTree from './CategoriesTree.vue';
 import CategoriesDetails from './CategoriesDetails.vue';
+
+import {bus} from '../../app';
 
 export default {
     name: 'categories',
@@ -28,18 +40,24 @@ export default {
     data() {
         return {
             categories:{},
-            selected_id:0,
+            selected:{
+                id:0,
+                parent_id:-1
+            },
             categories_opened:[]
         }
     },
 
     created() {
         this.fetchCategories();
+        bus.$on("selectionChange", (data)=>{
+            this.selected.id=data.id;
+            this.selected.parent_id=data.parent_id;
+        })
     },
 
     methods:{
-
-      
+     
         fetchCategories() {
             fetch("/api/categories")
                 .then(res=> res.json())
@@ -49,12 +67,12 @@ export default {
                 })
                 .catch(err => console.log(err));
         },
+
         addMetaToCategories(cat){
-            
-            //additional child for new category
+           //additional child for new category
             let newCategory={
                 id: -1,
-                name: "<new>",
+                name: "",
                 parent_id: cat.id,
                 children:[]
             }

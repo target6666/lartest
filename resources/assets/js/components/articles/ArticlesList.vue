@@ -41,21 +41,28 @@
             </tbody>
         </table>
         <!--Pagination-->
-        <div>
-            <button 
-                class="btn btn-primary" 
-                v-bind:class="{'btn btn-secondary disabled': !pagination.prev_page_url}" 
-                @click="prev($event)">
-                prev
-            </button>
-            <span>Seite {{pagination.current_page}} / {{pagination.last_page}} </span>
-            <button 
-                class="btn btn-primary" 
-                v-bind:class="{'btn btn-secondary disabled': !pagination.next_page_url}" 
-                @click="next($event)">
-                next
-            </button>
-        </div>
+        <nav>
+            <ul class="pagination pagination-sm">
+                <li class="page-item" v-bind:class="{'disabled': !pagination.prev_page_url}">
+                    <a  href="#" class="page-link" @click="prev($event)">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a  href="#" class="page-link">
+                        <span>Seite {{pagination.current_page}} / {{pagination.last_page}} </span>
+                    </a>
+                </li>
+                
+                <li class="page-item" v-bind:class="{'disabled': !pagination.next_page_url}">
+                    <a href="#" class="page-link" @click="next($event)">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 

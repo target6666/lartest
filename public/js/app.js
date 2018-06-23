@@ -13985,6 +13985,7 @@ module.exports = __webpack_require__(52);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bus", function() { return bus; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_articles_ArticlesList_vue__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_articles_ArticlesList_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_articles_ArticlesList_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_categories_Categories_vue__ = __webpack_require__(43);
@@ -14009,6 +14010,7 @@ window.Vue = __webpack_require__(37);
 
 
 
+var bus = new Vue();
 var app = new Vue({
   el: '#app',
   components: {
@@ -47383,6 +47385,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'articles-list',
@@ -47657,48 +47666,76 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("div", [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          class: {
-            "btn btn-secondary disabled": !_vm.pagination.prev_page_url
+    _c("nav", [
+      _c("ul", { staticClass: "pagination pagination-sm" }, [
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.prev_page_url }
           },
-          on: {
-            click: function($event) {
-              _vm.prev($event)
-            }
-          }
-        },
-        [_vm._v("\n            prev\n        ")]
-      ),
-      _vm._v(" "),
-      _c("span", [
-        _vm._v(
-          "Seite " +
-            _vm._s(_vm.pagination.current_page) +
-            " / " +
-            _vm._s(_vm.pagination.last_page) +
-            " "
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.prev($event)
+                  }
+                }
+              },
+              [
+                _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("«")]),
+                _vm._v(" "),
+                _c("span", { staticClass: "sr-only" }, [_vm._v("Previous")])
+              ]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item disabled" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _c("span", [
+              _vm._v(
+                "Seite " +
+                  _vm._s(_vm.pagination.current_page) +
+                  " / " +
+                  _vm._s(_vm.pagination.last_page) +
+                  " "
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.next_page_url }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.next($event)
+                  }
+                }
+              },
+              [
+                _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("»")]),
+                _vm._v(" "),
+                _c("span", { staticClass: "sr-only" }, [_vm._v("Next")])
+              ]
+            )
+          ]
         )
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          class: {
-            "btn btn-secondary disabled": !_vm.pagination.next_page_url
-          },
-          on: {
-            click: function($event) {
-              _vm.next($event)
-            }
-          }
-        },
-        [_vm._v("\n            next\n        ")]
-      )
+      ])
     ])
   ])
 }
@@ -47784,6 +47821,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CategoriesTree_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__CategoriesTree_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CategoriesDetails_vue__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CategoriesDetails_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__CategoriesDetails_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app__ = __webpack_require__(13);
 //
 //
 //
@@ -47798,6 +47836,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -47814,34 +47864,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             categories: {},
-            selected_id: 0,
+            selected: {
+                id: 0,
+                parent_id: -1
+            },
             categories_opened: []
         };
     },
     created: function created() {
+        var _this = this;
+
         this.fetchCategories();
+        __WEBPACK_IMPORTED_MODULE_2__app__["bus"].$on("selectionChange", function (data) {
+            _this.selected.id = data.id;
+            _this.selected.parent_id = data.parent_id;
+        });
     },
 
 
     methods: {
         fetchCategories: function fetchCategories() {
-            var _this = this;
+            var _this2 = this;
 
             fetch("/api/categories").then(function (res) {
                 return res.json();
             }).then(function (res) {
-                _this.categories = res.data[0];
-                _this.addMetaToCategories(_this.categories);
+                _this2.categories = res.data[0];
+                _this2.addMetaToCategories(_this2.categories);
             }).catch(function (err) {
                 return console.log(err);
             });
         },
         addMetaToCategories: function addMetaToCategories(cat) {
-
             //additional child for new category
             var newCategory = {
                 id: -1,
-                name: "<new>",
+                name: "",
                 parent_id: cat.id,
                 children: []
             };
@@ -47932,6 +47990,17 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(13);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -47971,6 +48040,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         toggle: function toggle() {
             this.open = !this.open;
+        },
+        select: function select(event) {
+            var args = {
+                id: this.model.id,
+                parent_id: this.model.parent_id
+            };
+
+            __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit("selectionChange", args);
         }
     }
 });
@@ -47984,12 +48061,39 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("li", [
-    _c("div", { on: { click: _vm.toggle } }, [
-      _vm._v("\n    " + _vm._s(_vm.model.name) + "\n    "),
-      _vm.isFolder
-        ? _c("span", [_vm._v("[" + _vm._s(_vm.open ? "-" : "+") + "]")])
-        : _vm._e()
-    ]),
+    _c("input", {
+      staticClass: "tree-radio",
+      attrs: {
+        type: "radio",
+        id: _vm.model.id + "-" + _vm.model.parent_id,
+        name: "selectedCategory"
+      },
+      on: {
+        change: function($event) {
+          _vm.select()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c(
+      "label",
+      {
+        attrs: { for: _vm.model.id + "-" + _vm.model.parent_id },
+        on: { click: _vm.toggle }
+      },
+      [
+        _vm.isFolder
+          ? _c("span", {
+              staticClass: "far",
+              class: _vm.open ? "fa-folder-open" : "fa-folder"
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.model.id == -1
+          ? _c("span", [_c("i", { staticClass: "far fa-plus-square" })])
+          : _c("span", [_vm._v(_vm._s(_vm.model.name))])
+      ]
+    ),
     _vm._v(" "),
     _c(
       "ul",
@@ -48005,7 +48109,15 @@ var render = function() {
         staticClass: "tree"
       },
       _vm._l(_vm.model.children, function(child, index) {
-        return _c("categories-tree", { key: index, attrs: { model: child } })
+        return _c("categories-tree", {
+          key: index,
+          attrs: { model: child },
+          on: {
+            selectionChange: function($event) {
+              this.$emit("selectionChange", _vm.args)
+            }
+          }
+        })
       })
     )
   ])
@@ -48136,9 +48248,17 @@ var render = function() {
     _c(
       "div",
       { staticClass: "col-md-8 border rounded" },
-      [_c("categories-details", { attrs: { selected_id: _vm.selected_id } })],
+      [_c("categories-details", { attrs: { selected_id: _vm.selected.id } })],
       1
-    )
+    ),
+    _vm._v(" "),
+    _c("span", [
+      _vm._v("\n        selected: " + _vm._s(_vm.selected.id) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("span", [
+      _vm._v("\n        parent: " + _vm._s(_vm.selected.parent_id) + "\n    ")
+    ])
   ])
 }
 var staticRenderFns = []

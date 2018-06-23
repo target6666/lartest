@@ -1,13 +1,13 @@
 ul.tree li { list-style: none; margin: 0; padding: 0; }
-ul.tree { padding-left: 25px; }
+ul.tree { padding-left: 50px; }
 
-ul.tree label{
+ul.tree li label{
     padding: 4px 15px;
     margin: 0px;
 }
 
 input.tree-radio{
-    opacity:0;
+    display: none;
 }
 
 input.tree-radio:checked +label {
