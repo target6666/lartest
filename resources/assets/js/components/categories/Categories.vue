@@ -1,12 +1,14 @@
 <template>
     <div class="row">
         <div class="col-md-4 border rounded" >
-            <ul class="tree">
-            <categories-tree 
-                :model="categories"
-                :opened="opened">
-            </categories-tree>
-            </ul>
+            <div class="m-2">
+                <ul class="tree">
+                <categories-tree 
+                    :model="categories"
+                    :opened="opened">
+                </categories-tree>
+                </ul>
+            </div>
         </div>
         <div class="col-md-8 border rounded" >
             <categories-details>
@@ -45,7 +47,7 @@ export default {
     },
 
     methods:{
-     
+
         fetchCategories() {
             fetch("/api/categories")
                 .then(res=> res.json())

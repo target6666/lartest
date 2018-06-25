@@ -47842,6 +47842,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -48219,6 +48221,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -48258,19 +48283,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).catch(function (err) {
                     return console.log(err);
                 });
-                //console.log(this.category);
             } else {
                 // new Category, id equals -parent_id
                 this.category = {
                     id: 0,
                     name: "Neue Warengruppe",
                     parent_id: id * -1,
-                    artno_min: 0,
-                    artno_max: 0
+                    artno_min: null,
+                    artno_max: null
 
                 };
             }
+        },
+
+
+        //store
+
+        //update
+
+        apiUpdate: function apiUpdate() {
+            if (this.category.id > 0) {
+                var data = this.category;
+                data.parent = null;
+                fetch("/api/categories/" + this.category.id, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT",
+                    body: JSON.stringify(data)
+                }).then(function (res) {
+                    return console.log(res);
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         }
+
+        //destroy
+
     }
 });
 
@@ -48284,92 +48335,144 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _vm.validCat
-      ? _c("div", [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-4" }, [
+      ? _c("div", { staticClass: "m-2" }, [
+          _c("div", { staticClass: "form-group row" }, [
+            _c("label", { staticClass: "col-form-label col-sm-3" }, [
               _vm._v("\n                Name: \n            ")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-8" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.category.name,
+                  expression: "category.name"
+                }
+              ],
+              staticClass: "form-control col-sm-9",
+              attrs: { type: "text" },
+              domProps: { value: _vm.category.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.category, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c("label", { staticClass: "col-form-label col-sm-3" }, [
+              _vm._v("\n                Artno: \n            ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group col-sm-4 p-0" }, [
+              _vm.category.parent
+                ? _c("div", { staticClass: "input-group-prepend" }, [
+                    _c("div", { staticClass: "input-group-text" }, [
+                      _vm._v(_vm._s(_vm.category.parent.artno_min))
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: this.category.name,
-                    expression: "this.category.name"
+                    value: _vm.category.artno_min,
+                    expression: "category.artno_min"
                   }
                 ],
-                attrs: { type: "text" },
-                domProps: { value: this.category.name },
+                staticClass: "form-control",
+                attrs: { type: "text", placeholder: "min. Artno" },
+                domProps: { value: _vm.category.artno_min },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(this.category, "name", $event.target.value)
+                    _vm.$set(_vm.category, "artno_min", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "col-form-label col-sm-1 text-center" },
+              [_vm._v("\n                -  \n            ")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group col-sm-4 p-0" }, [
+              _vm.category.parent
+                ? _c("div", { staticClass: "input-group-prepend" }, [
+                    _c("div", { staticClass: "input-group-text" }, [
+                      _vm._v(_vm._s(_vm.category.parent.artno_max))
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.category.artno_max,
+                    expression: "category.artno_max"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", placeholder: "max. Artno" },
+                domProps: { value: _vm.category.artno_max },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.category, "artno_max", $event.target.value)
                   }
                 }
               })
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-4" }, [
-              _vm._v("\n                selected_id: \n            ")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-8" }, [
-              _c("input", {
-                directives: [
+          _c("div", { staticClass: "form-group row" }, [
+            _vm.category.id > 0
+              ? _c(
+                  "button",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: this.category.id,
-                    expression: "this.category.id"
-                  }
-                ],
-                attrs: { type: "text" },
-                domProps: { value: this.category.id },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(this.category, "id", $event.target.value)
-                  }
-                }
-              })
-            ])
+                    staticClass: "btn btn-primary btn-block",
+                    on: { click: _vm.apiUpdate }
+                  },
+                  [
+                    _c("i", { staticClass: "far fa-save" }, [
+                      _vm._v(" Speichern ")
+                    ])
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.category.id > 0
+              ? _c("button", { staticClass: "btn btn-danger btn-sm ml-auto" }, [
+                  _c("i", { staticClass: "far fa-trash-alt" }, [
+                    _vm._v(" Löschen ")
+                  ])
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-4" }, [
-              _vm._v("\n                selected_parent_id: \n            ")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-8" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: this.category.parent_id,
-                    expression: "this.category.parent_id"
-                  }
-                ],
-                attrs: { type: "text" },
-                domProps: { value: this.category.parent_id },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(this.category, "parent_id", $event.target.value)
-                  }
-                }
-              })
-            ])
+          _c("div", { staticClass: "text-right font-weight-light small" }, [
+            _vm._v("\n            id: " + _vm._s(_vm.category.id)),
+            _c("br"),
+            _vm._v(
+              "\n            parent_id: " +
+                _vm._s(_vm.category.parent_id) +
+                "\n        "
+            )
           ])
         ])
       : _vm._e()
@@ -48395,16 +48498,18 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-md-4 border rounded" }, [
-      _c(
-        "ul",
-        { staticClass: "tree" },
-        [
-          _c("categories-tree", {
-            attrs: { model: _vm.categories, opened: _vm.opened }
-          })
-        ],
-        1
-      )
+      _c("div", { staticClass: "m-2" }, [
+        _c(
+          "ul",
+          { staticClass: "tree" },
+          [
+            _c("categories-tree", {
+              attrs: { model: _vm.categories, opened: _vm.opened }
+            })
+          ],
+          1
+        )
+      ])
     ]),
     _vm._v(" "),
     _c(

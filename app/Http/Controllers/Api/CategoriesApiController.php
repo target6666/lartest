@@ -22,7 +22,7 @@ class CategoriesApiController extends Controller
                 $query->select('id', 'name', 'parent_id');
                 }])
             ->get();
-        return CategoryResource::collection($categories);
+        return new CategoryResource($categories);
     }
 
     /**
@@ -35,8 +35,11 @@ class CategoriesApiController extends Controller
     {
         $category=Category::select('id', 'name', 'parent_id', 'artno_min', 'artno_max')
             ->where('id', $id)
+            ->with(['parent' => function($query){
+                $query->select('id', 'name', 'parent_id', 'artno_min', 'artno_max');
+            }])
             ->get();
-        return CategoryResource::collection($category);
+        return new CategoryResource($category);
     }
 
     /**
@@ -47,7 +50,12 @@ class CategoriesApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $request->validate([
+        //         'name' => 'required|string|unique:categories|max:255',
+        //         'artno_min' => 'numeric',
+        //         'artno_max' => 'numeric'
+        //     ]);
+        return response()->json(['error'=>'foobar'],202);
     }
 
     /**
@@ -59,7 +67,22 @@ class CategoriesApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|unique:categories|max:255',
+            'artno_min' => 'nullable|numeric',
+            'artno_max' => 'nullable|numeric'
+        ]);
+
+        $data=$request->json()->all();
+        $category=Category::findOrFail($id);
+       
+        $category->name = $data['name'];
+        $category->artno_min = $data['artno_min'];
+        $category->artno_max = $data['artno_max'];
+
+        if ($category->save()){
+            return new CategoryResource($category);
+        }
     }
 
     /**
