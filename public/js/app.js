@@ -47885,15 +47885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             console.log("fetched categories");
         },
         addMetaToCategories: function addMetaToCategories(cat) {
-            //additional child for new category
-            var newCategory = {
-                id: -1,
-                name: "",
-                parent_id: cat.id,
-                children: []
-            };
-
-            if (cat.id != -1) {
+            if (cat.id > 0) {
                 var child = {};
                 var _iteratorNormalCompletion = true;
                 var _didIteratorError = false;
@@ -47905,6 +47897,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                         this.addMetaToCategories(child);
                     }
+                    //additional child for new category
                 } catch (err) {
                     _didIteratorError = true;
                     _iteratorError = err;
@@ -47920,6 +47913,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
 
+                var newCategory = {
+                    id: cat.id * -1, //id = parent_id * -1
+                    name: "",
+                    parent_id: cat.id,
+                    children: []
+                };
                 cat.children.push(newCategory);
             }
         }
@@ -48043,13 +48042,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         select: function select(event) {
-            var id;
-            if (this.model.id > 0) {
-                id = this.model.id;
-            } else {
-                id = this.model.parent_id * -1;
-            }
-            __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit("selectionChange", id);
+            __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit("selectionChange", this.model.id);
         }
     }
 });
@@ -48091,7 +48084,7 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _vm.model.id == -1
+        _vm.model.id < 0
           ? _c("span", [_c("i", { staticClass: "far fa-plus-square" })])
           : _c("span", [_vm._v(_vm._s(_vm.model.name))])
       ]
@@ -48303,15 +48296,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         apiUpdate: function apiUpdate() {
             if (this.category.id > 0) {
-                var data = this.category;
-                data.parent = null;
+                this.category;
                 fetch("/api/categories/" + this.category.id, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                     method: "PUT",
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(this.category)
                 }).then(function (res) {
                     return console.log(res);
                 }).catch(function (err) {

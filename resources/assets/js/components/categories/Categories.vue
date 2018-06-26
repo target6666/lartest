@@ -60,18 +60,17 @@ export default {
         },
 
         addMetaToCategories(cat){
-           //additional child for new category
-            let newCategory={
-                id: -1,
-                name: "",
-                parent_id: cat.id,
-                children:[]
-            }
-            
-            if (cat.id!=-1){
+            if (cat.id>0){
                 let child={};
                 for (child of cat.children){
                     this.addMetaToCategories(child);
+                }
+                //additional child for new category
+                let newCategory={
+                    id: cat.id*-1,   //id = parent_id * -1
+                    name: "",
+                    parent_id: cat.id,
+                    children:[]
                 }
                 cat.children.push(newCategory);
             }

@@ -8,7 +8,7 @@
         <label :for="model.id+'-'+model.parent_id" @click="toggleOpened">
             <span v-if="isFolder" class="far" :class="isOpen ? 'fa-folder-open' : 'fa-folder'">
             </span>
-            <span v-if="model.id==-1"><i class="far fa-plus-square"></i></span>
+            <span v-if="model.id<0"><i class="far fa-plus-square"></i></span>
             <span v-else>{{model.name}}</span>
         </label>
         <ul class="tree" v-show="isOpen">
@@ -65,14 +65,7 @@ export default {
             }
         },
         select: function(event) {
-            var id
-            if (this.model.id>0){
-                id=this.model.id;
-            }
-            else{
-                id=this.model.parent_id * -1
-            }
-            bus.$emit("selectionChange", id);
+            bus.$emit("selectionChange", this.model.id);
         }
     }
 }

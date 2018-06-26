@@ -68,7 +68,7 @@ class CategoriesApiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|unique:categories|max:255',
+            'name' => 'required|string|unique:categories,name,'.$id.'|max:255',    //unique name, except id=$id
             'artno_min' => 'nullable|numeric',
             'artno_max' => 'nullable|numeric'
         ]);

@@ -108,8 +108,7 @@ export default {
 
         apiUpdate(){
             if (this.category.id>0){
-                var data=this.category;
-                data.parent=null;        
+                this.category;  
                 fetch("/api/categories/"+this.category.id,
                 {   
                     headers: {
@@ -117,7 +116,7 @@ export default {
                         'Content-Type': 'application/json'
                     },
                     method: "PUT",
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(this.category)
                 })
                     .then(res=> console.log(res))
                     .catch(err => console.log(err));
