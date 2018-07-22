@@ -9,7 +9,7 @@ class Category extends Model
     public function children(){
         return $this->hasMany('App\Category', 'parent_id', 'id')
             ->with(['children' => function($query){
-                $query->select('id', 'name', 'parent_id', 'parent_id', 'artno_min');
+                $query->select('id', 'name', 'parent_id');
             }]); ;
     }
     

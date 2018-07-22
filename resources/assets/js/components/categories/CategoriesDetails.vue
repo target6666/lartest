@@ -42,6 +42,10 @@
                 <button class="btn btn-primary btn-block" @click="apiUpdate" v-if="category.id>0">
                     <i class="far fa-save"> Speichern </i>
                 </button>
+                <button class="btn btn-primary btn-block" @click="apiStore" v-if="category.id<=0">
+                    <i class="far fa-save"> Speichern (neu)</i>
+                </button>
+
                 <button class="btn btn-danger btn-sm ml-auto" v-if="category.id>0">
                     <i class="far fa-trash-alt"> Löschen </i>
                 </button>
@@ -81,7 +85,6 @@ export default {
         //show
         apiShow(id) {
             if (id>0){
-        
                 fetch("/api/categories/"+id)
                     .then(res=> res.json())
                     .then(res => {
@@ -93,16 +96,49 @@ export default {
                 // new Category, id equals -parent_id
                 this.category={
                     id:0,
-                    name:"Neue Warengruppe",
+                    name:"",
                     parent_id: id*-1,
-                    artno_min: null ,
-                    artno_max: null 
-
-                }
+                    artno_min: null,
+                    artno_max: null,
+                    parent: null
+                };
+                //get parent from api
+                fetch("/api/categories/"+this.category.parent_id)
+                    .then(res=> res.json())
+                    .then(res => {
+                        this.category.parent=res.data[0];
+                    })
+                    .catch(err => console.log(err))
             }
         },
 
         //store
+
+        apiStore(){
+            if (this.category.id==0){
+                fetch("/api/categories",
+                {   
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(this.category)
+                })
+                    .then(res=> res.json())
+                    .then(res => {
+                        if (!res.data.errors){
+                            this.category=res.data;
+                            bus.$emit("updateTree");
+                        }
+                        else{
+                            //errorhandling
+                        }
+                    })
+                    .catch(err => console.log(err));
+            }
+
+        },
 
         //update
 
@@ -118,7 +154,10 @@ export default {
                     method: "PUT",
                     body: JSON.stringify(this.category)
                 })
-                    .then(res=> console.log(res))
+                    .then(res=> res.json())
+                    .then(res=> {
+                        bus.$emit("updateTree");
+                    })
                     .catch(err => console.log(err));
             }
         }

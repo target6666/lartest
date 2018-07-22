@@ -22,7 +22,9 @@ class CategoriesApiController extends Controller
                 $query->select('id', 'name', 'parent_id');
                 }])
             ->get();
-        return new CategoryResource($categories);
+        return (new CategoryResource($categories))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -39,7 +41,9 @@ class CategoriesApiController extends Controller
                 $query->select('id', 'name', 'parent_id', 'artno_min', 'artno_max');
             }])
             ->get();
-        return new CategoryResource($category);
+        return (new CategoryResource($category))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -50,12 +54,24 @@ class CategoriesApiController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //         'name' => 'required|string|unique:categories|max:255',
-        //         'artno_min' => 'numeric',
-        //         'artno_max' => 'numeric'
-        //     ]);
-        return response()->json(['error'=>'foobar'],202);
+        $request->validate([
+                 'name' => 'required|string|unique:categories|max:255',
+                 'artno_min' => 'numeric',
+                 'artno_max' => 'numeric'
+             ]);
+        $data=$request->json()->all();
+
+        $category=new Category;
+        $category->name = $data['name'];
+        $category->artno_min = $data['artno_min'];
+        $category->artno_max = $data['artno_max'];
+        $category->parent_id = $data['parent_id'];
+
+        if ($category->save()){
+            return (new CategoryResource($category))
+            ->response()
+            ->setStatusCode(201);
+        }
     }
 
     /**
@@ -81,7 +97,9 @@ class CategoriesApiController extends Controller
         $category->artno_max = $data['artno_max'];
 
         if ($category->save()){
-            return new CategoryResource($category);
+            return (new CategoryResource($category))
+            ->response()
+            ->setStatusCode(200);
         }
     }
 

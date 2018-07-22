@@ -47866,19 +47866,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     created: function created() {
+        var _this = this;
+
         this.fetchCategories();
+        __WEBPACK_IMPORTED_MODULE_2__app__["bus"].$on("updateTree", function (arg) {
+            _this.fetchCategories();
+        });
     },
 
 
     methods: {
         fetchCategories: function fetchCategories() {
-            var _this = this;
+            var _this2 = this;
 
             fetch("/api/categories").then(function (res) {
                 return res.json();
             }).then(function (res) {
-                _this.categories = res.data[0];
-                _this.addMetaToCategories(_this.categories);
+                _this2.categories = res.data[0];
+                _this2.addMetaToCategories(_this2.categories);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -47979,7 +47984,6 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(2);
-//
 //
 //
 //
@@ -48106,12 +48110,7 @@ var render = function() {
       _vm._l(_vm.model.children, function(child, index) {
         return _c("categories-tree", {
           key: index,
-          attrs: { model: child, opened: _vm.opened },
-          on: {
-            selectionChange: function($event) {
-              this.$emit("selectionChange", _vm.args)
-            }
-          }
+          attrs: { model: child, opened: _vm.opened }
         })
       })
     )
@@ -48237,6 +48236,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -48268,7 +48271,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             if (id > 0) {
-
                 fetch("/api/categories/" + id).then(function (res) {
                     return res.json();
                 }).then(function (res) {
@@ -48280,17 +48282,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // new Category, id equals -parent_id
                 this.category = {
                     id: 0,
-                    name: "Neue Warengruppe",
+                    name: "",
                     parent_id: id * -1,
                     artno_min: null,
-                    artno_max: null
-
+                    artno_max: null,
+                    parent: null
                 };
+                //get parent from api
+                fetch("/api/categories/" + this.category.parent_id).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    _this2.category.parent = res.data[0];
+                }).catch(function (err) {
+                    return console.log(err);
+                });
             }
         },
 
 
         //store
+
+        apiStore: function apiStore() {
+            var _this3 = this;
+
+            if (this.category.id == 0) {
+                fetch("/api/categories", {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(this.category)
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    if (!res.data.errors) {
+                        _this3.category = res.data;
+                        __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit("updateTree");
+                    } else {
+                        //errorhandling
+                    }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+
 
         //update
 
@@ -48305,7 +48342,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     method: "PUT",
                     body: JSON.stringify(this.category)
                 }).then(function (res) {
-                    return console.log(res);
+                    return res.json();
+                }).then(function (res) {
+                    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit("updateTree");
                 }).catch(function (err) {
                     return console.log(err);
                 });
@@ -48443,6 +48482,21 @@ var render = function() {
                   [
                     _c("i", { staticClass: "far fa-save" }, [
                       _vm._v(" Speichern ")
+                    ])
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.category.id <= 0
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-block",
+                    on: { click: _vm.apiStore }
+                  },
+                  [
+                    _c("i", { staticClass: "far fa-save" }, [
+                      _vm._v(" Speichern (neu)")
                     ])
                   ]
                 )

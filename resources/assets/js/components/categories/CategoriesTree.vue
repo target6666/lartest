@@ -16,8 +16,7 @@
             v-for="(child, index) in model.children"
             :key="index"
             :model="child"
-            :opened="opened" 
-            v-on:selectionChange="this.$emit('selectionChange', args);"> 
+            :opened="opened"> 
         </categories-tree>
         </ul>
     </li>

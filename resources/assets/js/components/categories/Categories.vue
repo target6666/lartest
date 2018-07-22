@@ -44,13 +44,16 @@ export default {
 
     created() {
         this.fetchCategories();
+        bus.$on("updateTree", (arg)=>{
+            this.fetchCategories();
+        })
     },
 
     methods:{
 
         fetchCategories() {
             fetch("/api/categories")
-                .then(res=> res.json())
+                .then(res => res.json())
                 .then(res => {
                     this.categories=res.data[0];
                     this.addMetaToCategories(this.categories);
