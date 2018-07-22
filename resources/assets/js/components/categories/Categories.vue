@@ -14,10 +14,7 @@
             <categories-details>
             </categories-details>
         </div>
-        <button @click="fetchCategories">refresh tree</button>
     </div>
-
-
 </template>
 
 <script>
@@ -26,6 +23,7 @@ import CategoriesTree from './CategoriesTree.vue';
 import CategoriesDetails from './CategoriesDetails.vue';
 
 import {bus} from '../../app';
+import {valert} from '../../app';
 
 export default {
     name: 'categories',

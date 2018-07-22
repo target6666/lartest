@@ -61,6 +61,7 @@
 <script>
 
 import {bus} from '../../app';
+import {valert} from '../../app';
 export default {
     name: 'categories-details',
     data() {
@@ -107,6 +108,7 @@ export default {
                     .then(res=> res.json())
                     .then(res => {
                         this.category.parent=res.data[0];
+
                     })
                     .catch(err => console.log(err))
             }
@@ -127,15 +129,29 @@ export default {
                 })
                     .then(res=> res.json())
                     .then(res => {
-                        if (!res.data.errors){
+                        if (!res.errors){
                             this.category=res.data;
                             bus.$emit("updateTree");
+                            let a={message:"SUCCESS: Stored "+this.category.name+" (id:"+this.category.id+")"};
+                            valert.$emit("valert", a);
                         }
                         else{
                             //errorhandling
+                            let a={
+                            errors:res.errors,
+                            message:res.message,
+                            }
+                            valert.$emit("valert", a);
                         }
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        console.log(err);
+                        let a={
+                            errors:[err.name],
+                            message:err.message,
+                        }
+                        valert.$emit("valert", a);
+                    });
             }
 
         },
@@ -156,9 +172,29 @@ export default {
                 })
                     .then(res=> res.json())
                     .then(res=> {
-                        bus.$emit("updateTree");
+                        if (!res.errors){
+                            let a={message:"SUCCESS: Updated "+this.category.name+" (id:"+this.category.id+")"};
+                            valert.$emit("valert", a);
+                            bus.$emit("updateTree");
+                        }
+                        else{
+                            //errorhandling
+                            let a={
+                            errors:res.errors,
+                            message:res.message,
+                            }
+                            valert.$emit("valert", a);
+                        }
+
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        console.log(err);
+                        let a={
+                            errors:[err.name],
+                            message:err.message,
+                        }
+                        valert.$emit("valert", a);
+                    });
             }
         }
 

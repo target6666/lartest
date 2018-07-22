@@ -19,6 +19,7 @@
     <div id="app">
         @include('inc.navbar')
         <div class="container col-10">
+            <valert></valert>
             @include('inc.message')
             @yield('content')
         </div>

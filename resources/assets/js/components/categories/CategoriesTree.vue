@@ -48,7 +48,6 @@ export default {
                 return false;
             else
                 return true;
-
         }
     },
     methods: {

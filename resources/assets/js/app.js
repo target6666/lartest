@@ -18,12 +18,15 @@ window.Vue = require('vue');
 
 import ArticlesList from './components/articles/ArticlesList.vue';
 import Categories from './components/categories/Categories.vue';
+import Valert from './components/Valert.vue';
 
 export const bus = new Vue();
+export const valert = new Vue();
 const app = new Vue({
     el: '#app',
     components: {
         'articles-list': ArticlesList,
         'categories': Categories,
+        'valert': Valert,
     }
 });
